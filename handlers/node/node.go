@@ -16,6 +16,7 @@ func getJwtKey() (string, error) {
 		return "", fmt.Errorf("environment variable JWT_SECURITY_KEY is not set")
 
 	}
+
 	return key, nil
 }
 
@@ -39,7 +40,7 @@ func AuthorizeNode() gin.HandlerFunc {
 			return
 		}
 
-		token := jwt.NewWithClaims(jwt.SigningMethodRS512, jwt.MapClaims{
+		token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
 			"id":      request.NodeId,
 			"groupId": request.GroupId,
 		})
