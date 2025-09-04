@@ -10,14 +10,14 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func getJwtKey() (string, error) {
+func getJwtKey() ([]byte, error) {
 	key := os.Getenv("JWT_SECURITY_KEY")
 	if key == "" {
-		return "", fmt.Errorf("environment variable JWT_SECURITY_KEY is not set")
+		return nil, fmt.Errorf("environment variable JWT_SECURITY_KEY is not set")
 
 	}
 
-	return key, nil
+	return []byte(key), nil
 }
 
 func AuthorizeNode() gin.HandlerFunc {
