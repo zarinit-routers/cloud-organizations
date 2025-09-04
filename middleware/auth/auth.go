@@ -35,6 +35,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		token, err := jwt.Parse(tokenString, getJwtKey())
 		if err != nil {
 			log.Error("Authentication failed", "error", err)
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 		data := NewDataFromToken(token)
