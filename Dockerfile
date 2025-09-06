@@ -8,6 +8,6 @@ RUN go mod download
 COPY . .
 RUN go build -o srv cmd/server/main.go 
 
-EXPOSE 8080
+EXPOSE 8060
 
 CMD ["/app/srv"]

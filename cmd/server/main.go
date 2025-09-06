@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
 	"github.com/zarinit-routers/cloud-organizaions/handlers/node"
 	"github.com/zarinit-routers/cloud-organizaions/middleware/implementation"
@@ -24,5 +25,6 @@ func main() {
 
 	api.POST("/authorize-node", node.AuthorizeNode())
 
-	server.Run(":8080")
+	log.Warn("Port 8060 is hardcoded, remove this ASAP")
+	server.Run(":8060")
 }
