@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"github.com/charmbracelet/log"
 
 	"github.com/zarinit-routers/cloud-organizaions/pkg/config"
 	"github.com/zarinit-routers/cloud-organizaions/pkg/server"
