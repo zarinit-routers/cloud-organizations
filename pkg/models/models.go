@@ -15,7 +15,7 @@ type Organization struct {
 	Members    []Member  `json:"members"`
 }
 type Member struct {
-	UserID         uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"userId"`
+	UserID         uuid.UUID `gorm:"type:uuid;primary_key" json:"userId"`
 	CreatedAt      time.Time `gorm:"autoCreateTime" json:"createdAt"`
-	OrganizationID uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"organizationId"`
+	OrganizationID uuid.UUID `gorm:"type:uuid;primary_key" json:"organizationId"`
 }
