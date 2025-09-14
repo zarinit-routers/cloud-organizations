@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/rubenv/sql-migrate v1.8.0
 	github.com/spf13/viper v1.20.1
-	github.com/zarinit-routers/middleware v0.4.0
+	github.com/zarinit-routers/middleware v0.4.3
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.25.10
 )
