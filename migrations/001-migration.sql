@@ -17,3 +17,5 @@ CREATE TABLE
 
 -- +migrate Down
 DROP TABLE organizations;
+
+DROP TABLE members;
