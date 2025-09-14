@@ -7,7 +7,7 @@ import (
 )
 
 func Load() error {
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
 	viper.AutomaticEnv()
 	viper.SetConfigName("orgs-config")
 	viper.AddConfigPath(".")
