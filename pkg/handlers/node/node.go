@@ -20,7 +20,7 @@ func getJwtKey() ([]byte, error) {
 	return []byte(key), nil
 }
 
-func AuthorizeNode() gin.HandlerFunc {
+func Authorize() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		var request Request
