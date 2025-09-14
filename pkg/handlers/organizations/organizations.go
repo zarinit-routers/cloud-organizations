@@ -28,10 +28,11 @@ func NewHandler() gin.HandlerFunc {
 		}
 		db := database.MustConnect()
 		org := models.Organization{
+			ID:        uuid.New(),
 			Name:      req.Name,
 			CreatedAt: time.Now(),
 		}
-		if err := db.Create(org).Error; err != nil {
+		if err := db.Create(&org).Error; err != nil {
 			log.Error("Failed create organization", "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{})
 			return
