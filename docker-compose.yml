@@ -16,7 +16,26 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
+  migrate:
+    image: postgres:16
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db/migrations:/migrations:ro
+    environment:
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGDATABASE: organizations
+    entrypoint: [
+      "sh","-c",
+      "for f in $(ls -1 /migrations/*.sql | sort); do \
+         echo \"==> $$f\"; \
+         psql -v ON_ERROR_STOP=1 -f \"$$f\"; \
+       done"
+    ]
   rabbitmq:
     image: rabbitmq:3-management
     ports:

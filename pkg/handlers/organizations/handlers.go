@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/zarinit-routers/cloud-organizations/pkg/handlers"
 	"github.com/zarinit-routers/cloud-organizations/pkg/models"
-	contracts "github.com/zarinit-routers/cloud-organizations/pkg/services/contracts"
+	"github.com/zarinit-routers/cloud-organizations/pkg/services/contracts"
 )
 
 // Handlers wires HTTP endpoints to service
