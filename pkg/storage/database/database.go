@@ -47,6 +47,9 @@ func MustConnect() *gorm.DB {
 }
 func connect() (*gorm.DB, error) {
 	connectionString := viper.GetString("db-connection-string")
+	if connectionString == "" {
+		return nil, fmt.Errorf("database connection string is not set")
+	}
 	db, err := gorm.Open(postgres.Open(connectionString))
 	if err != nil {
 		return nil, err
