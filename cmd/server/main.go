@@ -8,8 +8,6 @@ import (
 	"github.com/zarinit-routers/cloud-organizaions/pkg/storage/database"
 )
 
-func init() {
-}
 func main() {
 
 	if err := config.Load(); err != nil {
@@ -21,5 +19,7 @@ func main() {
 	}
 
 	srv := server.New()
-	srv.Run(server.Address())
+	if err := srv.Run(server.Address()); err != nil {
+		log.Fatal("Failed start server", "error", err)
+	}
 }

@@ -2,7 +2,9 @@ package organizations
 
 import (
 	"crypto/rand"
+	"errors"
 	"net/http"
+	"slices"
 	"time"
 
 	"github.com/charmbracelet/log"
@@ -136,4 +138,107 @@ func GeneratePassphraseHandler() gin.HandlerFunc {
 
 func generatePassphrase() string {
 	return rand.Text()
+}
+
+func DeleteHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req DeleteOrganizationRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			log.Error("Failed bind JSON", "error", err)
+			c.JSON(http.StatusBadRequest, gin.H{})
+			return
+		}
+		db := database.MustConnect()
+		var org models.Organization
+		if err := db.First(&org, req.ID).Error; err != nil {
+			log.Error("Failed get organization", "error", err)
+			c.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+		if err := db.Unscoped().Delete(&org).Error; err != nil {
+			log.Error("Failed delete organization", "error", err)
+			c.JSON(http.StatusInternalServerError, gin.H{})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{})
+	}
+}
+
+type DeleteOrganizationRequest struct {
+	ID uuid.UUID `json:"id" binding:"required"`
+}
+
+func AddMembersHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req AddMembersRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			log.Error("Failed bind JSON", "error", err)
+			c.JSON(http.StatusBadRequest, gin.H{})
+			return
+		}
+		db := database.MustConnect()
+		var org models.Organization
+		if err := db.Preload("Members").First(&org, req.ID).Error; err != nil {
+			log.Error("Failed get organization", "error", err)
+			c.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+		for _, user := range req.Users {
+			org.Members = append(org.Members, models.Member{
+				UserID: user,
+			})
+		}
+		if err := db.Save(&org).Error; err != nil {
+			log.Error("Failed save organization", "error", err)
+			c.JSON(http.StatusInternalServerError, gin.H{})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{})
+	}
+}
+
+type AddMembersRequest struct {
+	ID    uuid.UUID   `json:"id" binding:"required"`
+	Users []uuid.UUID `json:"users" binding:"required"`
+}
+
+func RemoveMembersHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req DeleteMemberRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			log.Error("Failed bind JSON", "error", err)
+			c.JSON(http.StatusBadRequest, gin.H{})
+			return
+		}
+		db := database.MustConnect()
+		var org models.Organization
+		if err := db.Preload("Members").First(&org, req.ID).Error; err != nil {
+			log.Error("Failed get organization", "error", err)
+			c.JSON(http.StatusNotFound, gin.H{})
+			return
+		}
+
+		var errG error
+		for _, member := range org.Members {
+			if slices.Contains(req.Users, member.UserID) {
+				err := db.Unscoped().Delete(&member).Error
+				if err != nil {
+					log.Error("Failed delete member", "member", member, "error", err)
+					errG = errors.Join(errG, err)
+					continue
+				}
+			}
+		}
+		if errG != nil {
+			log.Error("Failed delete members", "error", errG)
+			c.JSON(http.StatusInternalServerError, gin.H{})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{})
+	}
+}
+
+type DeleteMemberRequest struct {
+	ID    uuid.UUID   `json:"id" binding:"required"`
+	Users []uuid.UUID `json:"users" binding:"required"`
 }

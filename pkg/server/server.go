@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/viper"
 	"github.com/zarinit-routers/cloud-organizaions/pkg/handlers/node"
 	"github.com/zarinit-routers/cloud-organizaions/pkg/handlers/organizations"
-	"github.com/zarinit-routers/cloud-organizaions/pkg/middleware/implementation"
 	"github.com/zarinit-routers/middleware/auth"
 )
 
@@ -21,9 +20,9 @@ func New() *gin.Engine {
 	api.POST("/new", auth.Middleware(auth.AdminOnly()), organizations.NewHandler())
 	api.POST("/update", auth.Middleware(auth.AdminOnly()), organizations.UpdateHandler())
 	api.POST("/generate-passphrase", auth.Middleware(auth.AdminOnly()), organizations.GeneratePassphraseHandler())
-	api.POST("/delete", auth.Middleware(auth.AdminOnly()), implementation.NotImplemented())
-	api.POST("/add-users", auth.Middleware(auth.AdminOnly()), implementation.NotImplemented())
-	api.POST("/remove-users", auth.Middleware(auth.AdminOnly()), implementation.NotImplemented())
+	api.POST("/delete", auth.Middleware(auth.AdminOnly()), organizations.DeleteHandler())
+	api.POST("/add-users", auth.Middleware(auth.AdminOnly()), organizations.AddMembersHandler())
+	api.POST("/remove-users", auth.Middleware(auth.AdminOnly()), organizations.RemoveMembersHandler())
 
 	api.POST("/authorize-node", node.Authorize())
 
