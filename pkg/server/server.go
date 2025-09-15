@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	"github.com/zarinit-routers/cloud-organizaions/pkg/handlers/ipc"
 	"github.com/zarinit-routers/cloud-organizaions/pkg/handlers/node"
 	"github.com/zarinit-routers/cloud-organizaions/pkg/handlers/organizations"
 	"github.com/zarinit-routers/middleware/auth"
@@ -25,6 +26,8 @@ func New() *gin.Engine {
 	api.POST("/remove-users", auth.Middleware(auth.AdminOnly()), organizations.RemoveMembersHandler())
 
 	api.POST("/authorize-node", node.Authorize())
+
+	api.POST("/get-user-organization", ipc.GetOrganizationHandler())
 
 	return server
 }
